@@ -1,0 +1,25 @@
+{
+  "name": "dailytask",
+  "version": "1.0.0",
+  "description": "be awesome today",
+  "main": "index.js",
+  "scripts": {
+    "test": "lab --verbose ./test/index.js",
+    "start": "node index.js"
+  },
+  "author": "valla",
+  "license": "ISC",
+  "dependencies": {
+    "blipp": "^2.3.0",
+    "boom": "^4.2.0",
+    "glue": "^4.1.0",
+    "hapi": "^16.0.1",
+    "hapi-level": "^5.0.1",
+    "lodash": "^4.17.4",
+    "uuid": "^3.0.1"
+  },
+  "devDependencies": {
+    "code": "^4.0.0",
+    "lab": "^11.2.1"
+  }
+}
