@@ -13,6 +13,6 @@ Glue.compose(Manifest, { relativeTo: process.cwd() + '/lib' }, (err, server) => 
     });
   }
   else {
-    module.exports = server;
+    module.exports.server = server;
   }
 });
