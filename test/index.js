@@ -3,14 +3,37 @@
 const Code = require('code');
 const Lab = require('lab');
 
-const server = require('../');
+const Glue = require('glue');
+const manifest = require('../lib');
 
 const lab = exports.lab = Lab.script();
 const it = lab.test;
 const describe = lab.experiment;
 const expect = Code.expect;
+const beforeEach = lab.beforeEach;
+const afterEach = lab.afterEach;
 
 const levelPath = './.temp';
+
+let server = null
+
+beforeEach((done) => {
+
+  Glue.compose(manifest, { relativeTo: process.cwd() + '/lib' }, (err, testServer) => {
+
+    server = testServer
+    done()
+  })
+})
+
+afterEach((done) => {
+
+  server.stop(() => {
+
+    server = null
+    done()
+  })
+})
 
 describe('Users', () => {
   it('creates a user', { parallel: false }, (done) => {
@@ -35,7 +58,7 @@ describe('Users', () => {
           expect(res.statusCode).to.equal(200);
           expect(result.firstname).to.equal(payload.firstname);
           expect(result.lastname).to.equal(payload.lastname);
-          server.stop(done);
+          done()
         });
   });
 });
