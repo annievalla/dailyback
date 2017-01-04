@@ -1,64 +1,44 @@
 'use strict';
 
+const Hapi = require('hapi');
 const Code = require('code');
 const Lab = require('lab');
-
-const Glue = require('glue');
-const manifest = require('../lib');
+const App = require('../lib');
+const Path = require('path');
 
 const lab = exports.lab = Lab.script();
-const it = lab.test;
-const describe = lab.experiment;
 const expect = Code.expect;
-const beforeEach = lab.beforeEach;
-const afterEach = lab.afterEach;
+const describe = lab.experiment;
+const it = lab.test;
 
-const levelPath = './.temp';
+describe('Server', () => {
+  it('starts server and returns hapi server object', (done) => {
+    const manifest = {};
+    const options = {};
 
-let server = null
+    App.init(manifest, options, (err, server) => {
 
-beforeEach((done) => {
+      expect(err).to.not.exist();
+      expect(server).to.be.instanceof(Hapi.Server);
 
-  Glue.compose(manifest, { relativeTo: process.cwd() + '/lib' }, (err, testServer) => {
+      server.stop(done);
+    });
+  });
 
-    server = testServer
-    done()
-  })
-})
+  it('starts server on provided port', (done) => {
+    const manifest = {
+      connections: [
+        {
+          port: 5000
+        }
+      ]
+    };
+    const options = {};
 
-afterEach((done) => {
-
-  server.stop(() => {
-
-    server = null
-    done()
-  })
-})
-
-describe('Users', () => {
-  it('creates a user', { parallel: false }, (done) => {
-        const options = {
-          method: 'POST',
-          url: '/api/v1/user',
-          payload: {
-            firstname: "Test",
-            lastname: "Test",
-            email: "test@test.ninja",
-            password: "testpasswordyolo",
-            taks: [],
-            current: [],
-            lastConnection: 1483315200
-          }
-        };
-
-        server.inject(options, (res) => {
-          const payload = options.payload;
-          const result = res.result;
-
-          expect(res.statusCode).to.equal(200);
-          expect(result.firstname).to.equal(payload.firstname);
-          expect(result.lastname).to.equal(payload.lastname);
-          done()
-        });
+    App.init(manifest, options, (err, server) => {
+      expect(err).to.not.exist();
+      expect(server.info.port).to.equal(5000);
+      server.stop(done);
+    });
   });
 });
