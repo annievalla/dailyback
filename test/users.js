@@ -31,6 +31,28 @@ describe('Users', () => {
         });
     });
 
+    it('creates a user with wrong fields', { parallel: false }, (done) => {
+        const options = {
+            method: 'POST',
+            url: '/user',
+            payload: {
+                firstname: "Test",
+                lastname: "Test",
+                email: "test@test.ninja",
+                password: "testpasswordyolo",
+                tasks: [],
+                fakeField: "yoloooo",
+                current: [],
+                lastConnection: 1483315200000
+            }
+        };
+
+        server.inject(options, (res) => {
+            expect(res.statusCode).to.equal(400);
+            done();
+        });
+    });
+
     it('creates a user', { parallel: false }, (done) => {
         const options = {
             method: 'POST',
@@ -40,9 +62,9 @@ describe('Users', () => {
                 lastname: "Test",
                 email: "test@test.ninja",
                 password: "testpasswordyolo",
-                taks: [],
+                tasks: [],
                 current: [],
-                lastConnection: 1483315200
+                lastConnection: 1483315200000
             }
         };
 
@@ -65,7 +87,7 @@ describe('Users', () => {
             url: `/user/${testUser}`,
             payload: {
                 password: "newpasswordtest",
-                lastConnection: 1483315900
+                lastConnection: 1483315900000
             }
         };
 
@@ -103,7 +125,6 @@ describe('Users', () => {
         };
 
         server.inject(options, (res) => {
-            const result = res.result;
             expect(res.statusCode).to.equal(200);
             done();
         });
@@ -121,12 +142,6 @@ describe('Users', () => {
         });
     });
 });
-
-const API_prefix = {
-    routes: {
-        prefix: '/api/v1'
-    }
-};
 
 const manifest = {
     connections: [
